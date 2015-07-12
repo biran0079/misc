@@ -13,7 +13,7 @@ EPI = 1e-6
 def isSolution(e): 
   try:
     return math.fabs(TARGET - eval(e)) < EPI
-  except (ZeroDivisionError, Exception):
+  except ZeroDivisionError:
     return False
 
 def partition(l):
