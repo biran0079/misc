@@ -4,9 +4,13 @@
 using namespace std;
 
 Node* ExactCoverPuzzleMaker::sparseMatrixToPuzzle(const vector<vector<int> >& a, int rN, int cN) {
+  return sparseMatrixToPuzzleWithSecondaryColumns(a, rN, cN, vector<int>());
+}
+
+Node* ExactCoverPuzzleMaker::sparseMatrixToPuzzleWithSecondaryColumns(
+    const vector<vector<int> >& a, int rN, int cN, const vector<int>& secondaryCols) {
   int nodeN = cN + 1;
-  for (int i = 0; i < rN; i++)
-    nodeN += a[i].size();
+  for (auto row : a) nodeN += row.size();
   Node* nodes = new Node[nodeN];
   Node** cols = new Node*[cN];
   int next = 0;
@@ -50,6 +54,12 @@ Node* ExactCoverPuzzleMaker::sparseMatrixToPuzzle(const vector<vector<int> >& a,
       p = cur;
       col->size++;
     }
+  }
+  for (int i : secondaryCols) {
+    Node* c = cols[i];
+    c->left->right = c->right;
+    c->right->left = c->left;
+    c->left = c->right = c;
   }
   delete[] cols;
   return root;
